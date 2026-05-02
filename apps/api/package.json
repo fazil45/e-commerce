@@ -3,19 +3,20 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "type":"module",
+  "type": "module",
   "scripts": {
     "start": "node dist/server.js",
     "build": "tsc -b",
-    "dev":"concurrently \"tsc -b --watch\" \"node --watch dist/server.js\""
+    "dev": "concurrently \"tsc -b --watch\" \"node --watch dist/server.js\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@repo/db":"workspace:*",
+    "@repo/db": "workspace:*",
     "bcrypt": "^6.0.0",
     "cloudinary": "^2.10.0",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
@@ -28,6 +29,7 @@
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
     "@types/bcrypt": "^6.0.0",
+    "@types/cookie-parser": "^1.4.10",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",

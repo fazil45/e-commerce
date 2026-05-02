@@ -1,1 +1,1 @@
-{"root":["./src/server.ts","./src/config/cloudinary.ts","./src/controllers/auth.controller.ts","./src/routes/auth.routes.ts"],"version":"5.9.2"}
+{"root":["./src/express.d.ts","./src/server.ts","./src/config/cloudinary.ts","./src/controllers/auth.controller.ts","./src/controllers/product.controller.ts","./src/middleware/admin.middleware.ts","./src/middleware/auth.middleware.ts","./src/middleware/multer.ts","./src/routes/auth.routes.ts","./src/routes/product.routes.ts"],"version":"5.9.2"}
