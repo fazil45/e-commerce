@@ -95,7 +95,22 @@ export const assets = {
     cross_icon
 }
 
-export const products = [
+type Size = "S" | "M" | "L" | "XL" | "XXL";
+
+export type ProductType = {
+        _id: string ,
+        name: string,
+        description:string,
+        price: number,
+        image: string[],
+        category: string,
+        subCategory: string,
+        sizes: Size[],
+        date: number,
+        bestseller: boolean
+    }
+
+export const products:ProductType[] = [
     {
         _id: "aaaaa",
         name: "Women Round Neck Cotton Top",
