@@ -3,8 +3,9 @@ import { ShopContext } from "../context/ShopContext";
 import { assets, type ProductType } from "../assets/assets";
 import Title from "../components/Title";
 import ProductItem from "../components/ProductItem";
-type CategoryType = "Man" | "Woman" | "Kids";
-type SubCategoryType = "Topwear" | "Bottomwear" | "Winterwear";
+
+export type CategoryType = "Man" | "Woman" | "Kids";
+export type SubCategoryType = "Topwear" | "Bottomwear" | "Winterwear";
 
 const Collection = () => {
   const { products,search,showSearch } = useContext(ShopContext);

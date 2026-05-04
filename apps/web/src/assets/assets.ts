@@ -95,7 +95,9 @@ export const assets = {
     cross_icon
 }
 
-type Size = "S" | "M" | "L" | "XL" | "XXL";
+export type Size = "S" | "M" | "L" | "XL" | "XXL";
+
+
 
 export type ProductType = {
         _id: string ,
