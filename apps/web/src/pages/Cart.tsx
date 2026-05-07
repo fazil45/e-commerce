@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { ShopContext } from "../context/ShopContext";
 import { assets } from "../assets/assets";
 import Title from "../components/Title";
+import CartTotal from "../components/CartTotal";
+import { useNavigate } from "react-router-dom";
 
 type CartItemType = {
   _id: string;
@@ -10,7 +12,7 @@ type CartItemType = {
 };
 
 const Cart = () => {
-  const { products, currency, updateQuantity, cartItems } =
+  const { products, currency, updateQuantity, cartItems,navigate } =
     useContext(ShopContext);
 
   const [cartData, setCartData] = useState<CartItemType[]>([]);
@@ -39,7 +41,7 @@ const Cart = () => {
         <Title text1="YOUR" text2="CART" />
       </div>
 
-      {/* ✅ Empty cart check */}
+      {/* Empty cart check */}
       {cartData.length === 0 ? (
         <div className="text-center text-xl py-10">Your cart is empty</div>
       ) : (
@@ -110,6 +112,15 @@ const Cart = () => {
           })}
         </div>
       )}
+
+      <div className="flex justify-end my-20">
+        <div className="w-full sm:w-112.5">
+          <CartTotal/>
+          <div className="w-full text-end">
+            <button onClick={() => navigate("/place-order")} className="bg-black text-white text-sm my-8 px-8 py-3">CHECKOUT</button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

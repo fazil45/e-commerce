@@ -1,6 +1,7 @@
-import { createContext, useEffect, useState, type ReactNode } from "react";
+import { createContext,  useState, type ReactNode } from "react";
 import { products, type ProductType } from "../assets/assets";
 import { toast } from "react-toastify";
+import { useNavigate, type NavigateFunction } from "react-router-dom";
 
 export type CartItemsType = {
   [itemId: string]: {
@@ -20,6 +21,8 @@ export type ShopContextType = {
   addToCart: (itemId: string, size: string) => void;
   updateQuantity: (itemId: string, size: string, quantity: number) => void;
   getCartCount: () => number;
+  getCartAmount: () => number;
+  navigate:NavigateFunction,
 };
 
 export const ShopContext = createContext<ShopContextType>({
@@ -33,7 +36,9 @@ export const ShopContext = createContext<ShopContextType>({
   cartItems: {},
   addToCart: () => {},
   updateQuantity: () => {},
-  getCartCount: () => 0
+  getCartCount: () => 0,
+  getCartAmount:() => 0,
+  navigate: () => {}
 });
 
 const ShopContextProvider = ({ children }: { children: ReactNode }) => {
@@ -41,6 +46,7 @@ const ShopContextProvider = ({ children }: { children: ReactNode }) => {
   const delivery_fee = 10;
   const [search, setSearch] = useState("");
   const [showSearch, setShowSearch] = useState(true);
+  const navigate:NavigateFunction = useNavigate() 
   const [cartItems,setCartItems] = useState<CartItemsType>({})
 
   const addToCart = async (itemId:string, size:string ) => {
@@ -77,6 +83,19 @@ const ShopContextProvider = ({ children }: { children: ReactNode }) => {
       return totalCount
   }
 
+  const getCartAmount = () => {
+    let totalAmount = 0
+    for (const itemId in cartItems) {
+      let itemInfo = products.find((product) => product._id === itemId)
+      for(const size in cartItems[itemId]){
+        if (cartItems[itemId][size] > 0) {
+          totalAmount += itemInfo?.price! * cartItems[itemId][size]
+        }
+      }
+    }
+    return totalAmount
+  }
+
  const updateQuantity = (itemId: string, size: string, quantity: number) => {
   setCartItems(prev => {
     const cartData = structuredClone(prev);
@@ -110,7 +129,9 @@ const ShopContextProvider = ({ children }: { children: ReactNode }) => {
     cartItems,
     addToCart,
     getCartCount,
-    updateQuantity
+    updateQuantity,
+    getCartAmount,
+    navigate
   };
 
   return <ShopContext.Provider value={value}>{children}</ShopContext.Provider>;
