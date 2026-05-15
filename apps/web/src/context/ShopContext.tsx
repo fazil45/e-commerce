@@ -1,7 +1,8 @@
-import { createContext,  useState, type ReactNode } from "react";
-import { products, type ProductType } from "../assets/assets";
+import { createContext, useEffect, useState, type ReactNode } from "react";
+import { type ProductType } from "../assets/assets";
 import { toast } from "react-toastify";
 import { useNavigate, type NavigateFunction } from "react-router-dom";
+import axios from "axios";
 
 export type CartItemsType = {
   [itemId: string]: {
@@ -12,111 +13,144 @@ export type CartItemsType = {
 export type ShopContextType = {
   products: ProductType[];
   currency: string;
+  backendUrl: string;
   delivery_fee: number;
   search: string;
   setSearch: React.Dispatch<React.SetStateAction<string>>;
   showSearch: boolean;
+  currentState: "Signup" | "Login";
   setShowSearch: React.Dispatch<React.SetStateAction<boolean>>;
+  setCurrentState: React.Dispatch<React.SetStateAction<"Signup" | "Login">>;
   cartItems: CartItemsType;
   addToCart: (itemId: string, size: string) => void;
   updateQuantity: (itemId: string, size: string, quantity: number) => void;
   getCartCount: () => number;
   getCartAmount: () => number;
-  navigate:NavigateFunction,
+  navigate: NavigateFunction;
 };
 
 export const ShopContext = createContext<ShopContextType>({
   products: [],
   currency: "$",
+  backendUrl: "",
   delivery_fee: 0,
   search: "",
   setSearch: () => {},
   showSearch: false,
+  currentState:"Signup",
+  setCurrentState:() => {},
   setShowSearch: () => {},
   cartItems: {},
   addToCart: () => {},
   updateQuantity: () => {},
   getCartCount: () => 0,
-  getCartAmount:() => 0,
-  navigate: () => {}
+  getCartAmount: () => 0,
+  navigate: () => {},
 });
 
 const ShopContextProvider = ({ children }: { children: ReactNode }) => {
   const currency = "$";
   const delivery_fee = 10;
+  const backendUrl = import.meta.env.VITE_HTTP_URL;
   const [search, setSearch] = useState("");
+  const [currentState, setCurrentState] = useState<"Signup" | "Login">(
+    "Signup",
+  );
   const [showSearch, setShowSearch] = useState(true);
-  const navigate:NavigateFunction = useNavigate() 
-  const [cartItems,setCartItems] = useState<CartItemsType>({})
+  const [products, setProducts] = useState<ProductType[]>([]);
+  const navigate: NavigateFunction = useNavigate();
+  const [cartItems, setCartItems] = useState<CartItemsType>({});
 
-  const addToCart = async (itemId:string, size:string ) => {
-
-    if(!size){
-      toast.error("Select Product Size")
-      return
+  const addToCart = async (itemId: string, size: string) => {
+    if (!size) {
+      toast.error("Select Product Size");
+      return;
     }
 
-    let cartData =  structuredClone(cartItems)
+    let cartData = structuredClone(cartItems);
 
     if (cartData[itemId]) {
       if (cartData[itemId][size]) {
-        cartData[itemId][size] += 1
+        cartData[itemId][size] += 1;
       } else {
-        cartData[itemId][size] = 1
+        cartData[itemId][size] = 1;
       }
     } else {
-      cartData[itemId] = {}
-      cartData[itemId][size] =1
+      cartData[itemId] = {};
+      cartData[itemId][size] = 1;
     }
-    setCartItems(cartData)
-  }
+    setCartItems(cartData);
+  };
 
-  const getCartCount =  () => {
-      let totalCount = 0
-      for (const itemId in cartItems) {
-        for (const size in cartItems[itemId]){
-            if (cartItems[itemId][size]) {
-               totalCount += cartItems[itemId][size]
-            }
+  const getCartCount = () => {
+    let totalCount = 0;
+    for (const itemId in cartItems) {
+      for (const size in cartItems[itemId]) {
+        if (cartItems[itemId][size]) {
+          totalCount += cartItems[itemId][size];
         }
       }
-      return totalCount
-  }
+    }
+    return totalCount;
+  };
 
   const getCartAmount = () => {
-    let totalAmount = 0
+    let totalAmount = 0;
     for (const itemId in cartItems) {
-      let itemInfo = products.find((product) => product._id === itemId)
-      for(const size in cartItems[itemId]){
+      let itemInfo = products.find((product) => product._id === itemId);
+      for (const size in cartItems[itemId]) {
         if (cartItems[itemId][size] > 0) {
-          totalAmount += itemInfo?.price! * cartItems[itemId][size]
+          totalAmount += itemInfo?.price! * cartItems[itemId][size];
         }
       }
     }
-    return totalAmount
-  }
+    return totalAmount;
+  };
 
- const updateQuantity = (itemId: string, size: string, quantity: number) => {
-  setCartItems(prev => {
-    const cartData = structuredClone(prev);
+  const updateQuantity = (itemId: string, size: string, quantity: number) => {
+    setCartItems((prev) => {
+      const cartData = structuredClone(prev);
 
-    // safety check
-    if (!cartData[itemId]) return prev;
+      // safety check
+      if (!cartData[itemId]) return prev;
 
-    if (quantity <= 0) {
-      delete cartData[itemId][size];
+      if (quantity <= 0) {
+        delete cartData[itemId][size];
 
-      // remove product if no sizes left
-      if (Object.keys(cartData[itemId]).length === 0) {
-        delete cartData[itemId];
+        // remove product if no sizes left
+        if (Object.keys(cartData[itemId]).length === 0) {
+          delete cartData[itemId];
+        }
+      } else {
+        cartData[itemId][size] = quantity;
       }
-    } else {
-      cartData[itemId][size] = quantity;
-    }
 
-    return cartData;
-  });
-};
+      return cartData;
+    });
+  };
+
+  const getProducts = async () => {
+    try {
+      const response = await axios.get(`${backendUrl}/product/list`, {
+        withCredentials: true,
+      });
+      if (response.data.success) {
+        setProducts(response.data.products);
+      } else {
+        toast.error(response.data.error);
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error(error.response?.data.error);
+      } else {
+        toast.error("Something went wrong");
+      }
+    }
+  };
+
+  useEffect(() => {
+    getProducts();
+  }, []);
 
   const value = {
     products,
@@ -131,7 +165,10 @@ const ShopContextProvider = ({ children }: { children: ReactNode }) => {
     getCartCount,
     updateQuantity,
     getCartAmount,
-    navigate
+    navigate,
+    backendUrl,
+    currentState,
+    setCurrentState
   };
 
   return <ShopContext.Provider value={value}>{children}</ShopContext.Provider>;

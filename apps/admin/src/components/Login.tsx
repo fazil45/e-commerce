@@ -1,36 +1,51 @@
+import axios from "axios";
 import { useForm } from "@tanstack/react-form";
 import type React from "react";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-    const [email, setEmail] = useState('')
-    const [password,setPassword] = useState('')
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate()
 
   const form = useForm({
     defaultValues: {
       email: "",
       password: "",
     },
-    onSubmit: async ({value}) => {
-        if (value.email === '' ) {
-            return toast.error('Enter email')
-        } else {
-            setEmail(value.email)
-        }
+    onSubmit: async ({ value }) => {
+      if (value.email === "") {
+        return toast.error("Enter email");
+      } else {
+        setEmail(value.email);
+      }
 
-        if (value.password === '' ) {
-            return toast.error('Enter password')
-        } else {
-            setEmail(value.password)
-        }
+      if (value.password === "") {
+        return toast.error("Enter password");
+      } else {
+        setPassword(value.password);
+      }
 
-        try {
-            const response = await axio
-        } catch (error) {
-            
+      try {
+        const response = await axios.post(
+          `${import.meta.env.VITE_HTTP_URL}/auth/admin`,
+          {
+            email,
+            password,
+          },{
+            withCredentials:true
+          }
+        );
+        if (response.data.success) {
+          toast.success("Signin succssfully");
         }
-
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          toast.error(error.response?.data.error);
+        }
+      }
     },
   });
 
@@ -38,10 +53,12 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center w-full">
       <div className="bg-white shadow-md rounded-lg px-8 py-6 max-w-md">
         <h1 className="text-2xl font-bold mb-4">Admin Panel</h1>
-        <form onSubmit={(e) => {
-            e.preventDefault()
-            form.handleSubmit()
-        }}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            form.handleSubmit();
+          }}
+        >
           <div className="mb-3 min-w-72">
             <form.Field
               name="email"

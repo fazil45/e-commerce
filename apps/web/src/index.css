@@ -20,6 +20,13 @@ a.active hr {
   font-style: normal;
 }
 
+
+select,input,textarea {
+    border: 1px solid #c2c2c2;
+    outline-color: #565652;
+    border-radius: 4px;
+}
+
 @media (max-width:640px) {
     a.active{
         background-color: black;

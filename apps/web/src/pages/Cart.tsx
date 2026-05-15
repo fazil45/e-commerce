@@ -1,9 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import  { useContext, useEffect, useState } from "react";
 import { ShopContext } from "../context/ShopContext";
 import { assets } from "../assets/assets";
 import Title from "../components/Title";
 import CartTotal from "../components/CartTotal";
-import { useNavigate } from "react-router-dom";
 
 type CartItemType = {
   _id: string;

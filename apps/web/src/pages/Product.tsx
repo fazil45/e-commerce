@@ -25,7 +25,7 @@ const Product = () => {
 
   useEffect(() => {
     fetchProductData();
-  }, [productId]);
+  }, [productId,products]);
 
   return productData ? (
     <div className="border-t-2 pt-10 transition-all ease-in duration-500 opacity-100">

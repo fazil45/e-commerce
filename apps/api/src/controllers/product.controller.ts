@@ -14,7 +14,7 @@ export const addProducts = async (req: Request, res: Response) => {
       bestSeller,
     } = req.body;
 
-    const files = req.files as Record<string, Express.Multer.File[]>;
+    const files = (req.files as Record<string, Express.Multer.File[]>) ?? {};
 
     const image2 = files.image2?.[0];
     const image3 = files.image3?.[0];
@@ -41,7 +41,7 @@ export const addProducts = async (req: Request, res: Response) => {
       price: Number(price),
       subCategory,
       bestSeller: bestSeller === true ? true : false,
-      sizes: JSON.parse(sizes),
+      sizes: sizes ? JSON.parse(sizes) : [],
       image: imageUrl,
       date: Date.now(),
     };
@@ -72,36 +72,34 @@ export const listProducts = async (req: Request, res: Response) => {
 
 export const removeProduct = async (req: Request, res: Response) => {
   try {
-    const productId = req.params["productId"]
+    const productId = req.params["productId"];
 
     if (!productId) {
-      return res.json({success:false,error:"product not found"})
+      return res.json({ success: false, error: "product not found" });
     }
 
-    const product = await productModel.findByIdAndDelete(productId)
+    const product = await productModel.findByIdAndDelete(productId);
 
-    return res.json({success:true,error:"Product deleted sucessfully"})
-
-  } catch (error) { 
+    return res.json({ success: true, error: "Product deleted sucessfully" });
+  } catch (error) {
     console.error(error);
-    return res.json({success:false,error:"Server error"})
+    return res.json({ success: false, error: "Server error" });
   }
 };
 
 export const singleProduct = async (req: Request, res: Response) => {
-   try {
-    const productId = req.params["productId"]
+  try {
+    const productId = req.params["productId"];
 
     if (!productId) {
-      return res.json({success:false,error:"product not found"})
+      return res.json({ success: false, error: "product not found" });
     }
 
-    const product = await productModel.findById(productId)
+    const product = await productModel.findById(productId);
 
-    return res.json({success:true,product})
-
-  } catch (error) { 
+    return res.json({ success: true, product });
+  } catch (error) {
     console.error(error);
-    return res.json({success:false,error:"Server error"})
+    return res.json({ success: false, error: "Server error" });
   }
 };
