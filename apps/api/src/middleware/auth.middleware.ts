@@ -9,7 +9,7 @@ export const authMiddleware = (
   try {
     const token = req.cookies.token;
 
-    if (token) {
+    if (!token) {
       return res.json({ success: false, message: "Unauthorised" });
     }
 
@@ -23,7 +23,7 @@ export const authMiddleware = (
     }
 
     req.userId = decoded._id;
-    next()
+    next();
   } catch (error) {
     if (error instanceof jwt.TokenExpiredError) {
       return res.status(401).json({

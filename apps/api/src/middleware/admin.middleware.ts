@@ -18,7 +18,7 @@ export const adminMiddleware = async (req:Request,res:Response,next:NextFunction
             return res.json({success:false,error:"Invalid or expired token"})
         } 
 
-        if (decoded.email === process.env.ADMIN_EMAIL && decoded.password === process.env.ADMIN_PASSWORD) {
+        if (decoded.email !== process.env.ADMIN_EMAIL && decoded.password !== process.env.ADMIN_PASSWORD) {
             return res.json({success:false,error:"Not authorised Login Again"})
         }
         next()

@@ -90,7 +90,7 @@ const SignupCard = ({
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 placeholder="Enter your name"
-                className="w-full border rounded-xl px-4 py-3 "
+                className="w-full border rounded-xl px-4 py-1"
               />
             </div>
           )}
@@ -107,7 +107,7 @@ const SignupCard = ({
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 placeholder="Enter your email"
-                className="w-full border rounded-xl px-4 py-3 "
+                className="w-full border rounded-xl px-4 py-1"
               />
             </div>
           )}
@@ -124,7 +124,7 @@ const SignupCard = ({
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 placeholder="Create password"
-                className="w-full border  rounded-xl px-4 py-3 "
+                className="w-full border  rounded-xl px-4 py-1"
               />
             </div>
           )}

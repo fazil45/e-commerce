@@ -60,7 +60,7 @@ const LoginCard = ({
   });
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md">
+    <div className="bg-gray-200 rounded-2xl shadow-lg p-8 w-full max-w-md">
       <div className="flex flex-col items-center justify-center">
         <h2 className="text-3xl font-bold mb-2">Login</h2>
 
@@ -85,7 +85,7 @@ const LoginCard = ({
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 placeholder="Enter your email"
-                className="w-full border rounded-xl px-4 py-3 "
+                className="w-full border rounded-xl px-4 py-1"
               />
             </div>
           )}
@@ -102,7 +102,7 @@ const LoginCard = ({
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 placeholder="Enter your password"
-                className="w-full border  rounded-xl px-4 py-3"
+                className="w-full border  rounded-xl px-4 py-1"
               />
             </div>
           )}

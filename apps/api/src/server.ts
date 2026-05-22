@@ -1,12 +1,13 @@
 import "dotenv/config"
-import express, {Request, Response} from "express"
+import express from "express"
 import { connectDB } from "@repo/db/client"
 import cors from "cors"
 import { connectCloudinary } from "./config/cloudinary.js"
 import userRouter from "./routes/auth.routes.js"
-import CookieParser from "cookie-parser"
 import productRouter from "./routes/product.routes.js"
 import cookieParser from "cookie-parser"
+import cartRouter from "./routes/cart.route.js"
+import orderRouter from "./routes/order.route.js"
 const app = express()
 const PORT = process.env.PORT
 connectDB()
@@ -22,15 +23,16 @@ app.use(cors({
     credentials: true,
 }))
 
-
+// User
 app.use("/api/auth",userRouter)
+
+// Product
 app.use("/api/product",productRouter)
 
-app.get("/",(req:Request, res:Response) => {
-    res.json({
-        message:"Hello Fazi"
-    })
-})
+// Cart 
+app.use("/api/cart",cartRouter)
 
+// Order
+app.use("/api/order",orderRouter)
 
 app.listen(PORT, () => console.log(`Server is running on Port:- ${PORT}`),)

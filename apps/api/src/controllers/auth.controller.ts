@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import validator from "validator";
 import { Request, Response } from "express";
 import { userModel } from "@repo/db/models";
+
 const isProduction = process.env.NODE_ENV === "production";
 
 export const register = async (req: Request, res: Response) => {
@@ -138,6 +139,12 @@ export const verifyAdmin = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const isAuth = async (req:Request, res:Response) => {
+  res.json({
+    success:true
+  })
+}
 
 
 export const logoutAdmin = async (req: Request, res: Response) => {
